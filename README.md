@@ -2,6 +2,20 @@
 
 This repository contains some of our internally and externally used helm-charts. Our favorized way to deploy services on kubernetes is Grafana Tanka and Jsonnet, but for some deployments Helm has some benefits.
 
+## Usage
+
+Add repository:
+
+```shell
+helm repo add cloudflight https://cloudflight.github.io/helm-charts
+```
+
+View available charts:
+
+```shell
+helm search repo cloudflight
+```
+
 ## Charts
 
 ### Dependency Track
