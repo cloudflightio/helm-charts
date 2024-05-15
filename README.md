@@ -7,7 +7,7 @@ This repository contains some of our internally and externally used helm-charts.
 Add repository:
 
 ```shell
-helm repo add cloudflight https://cloudflight.github.io/helm-charts
+helm repo add cloudflight https://cloudflightio.github.io/helm-charts
 ```
 
 View available charts:
