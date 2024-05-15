@@ -1,0 +1,12 @@
+{{- if .Values.oidc.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dependency-track.fullname" . }}-frontend-oidc
+  labels:
+    app.kubernetes.io/component: frontend
+    {{- include "dependency-track.labels" . | nindent 4 }}
+data:
+  OIDC_CLIENT_ID: "{{ .Values.oidc.client_id }}"
+  OIDC_ISSUER: "{{ .Values.oidc.issuer }}"
+{{- end }}

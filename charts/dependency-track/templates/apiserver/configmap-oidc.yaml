@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dependency-track.fullname" . }}-apiserver-oidc
+  labels:
+    app.kubernetes.io/component: apiserver
+    {{- include "dependency-track.labels" . | nindent 4 }}
+data:
+  ALPINE_OIDC_ENABLED: "{{ .Values.oidc.enabled }}"
+  ALPINE_OIDC_CLIENT_ID: "{{ .Values.oidc.client_id }}"
+  ALPINE_OIDC_ISSUER: "{{ .Values.oidc.issuer }}"
+  ALPINE_OIDC_USERNAME_CLAIM: "{{ .Values.oidc.username_claim }}"
+  ALPINE_OIDC_USER_PROVISIONING: "{{ .Values.oidc.user_provisioning }}"
+  ALPINE_OIDC_TEAMS_CLAIM: "{{ .Values.oidc.teams_claim }}"
+  ALPINE_OIDC_TEAM_SYNCHRONIZATION: "{{ .Values.oidc.team_synchronization }}"

@@ -1,0 +1,111 @@
+# Default values for dependency-track.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+oidc:
+  enabled: false 
+
+apiserver:
+  replicaCount: 1
+  image:
+    repository: dependencytrack/apiserver
+    pullPolicy: IfNotPresent
+    tag: "4.10.1"
+  persistentVolume:
+    accessModes:
+    - ReadWriteOnce
+    enabled: true
+    size: 8Gi
+    annotations: {}
+    storageClass: ""
+  # is used of no persistant volume is set
+  emptyDir:
+    sizeLimit: 8Gi
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: dependencytrack/frontend
+    pullPolicy: IfNotPresent
+    tag: "4.10.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  
+  # enable this if you want to use openshift routes instead if generic ingress resources
+  openshift: false
+
+  tls:
+    enabled: false
+    secretName: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    ## allow large bom.xml uploads:
+    # nginx.ingress.kubernetes.io/proxy-body-size: 10m
+  host: example.com
+  # ingressClassName: nginx
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## Bitnami Postgresql Chart
+# for details see https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+postgresql:
+  enabled: true
+  auth:
+    username: dependencytrack
+    password:	dependencytrack
+    database: dependencytrack

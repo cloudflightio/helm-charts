@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: apiserver
+    {{- include "dependency-track.labels" . | nindent 4 }}
+  name: {{ include "dependency-track.fullname" . }}-apiserver
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/component: apiserver
+    {{- include "dependency-track.selectorLabels" . | nindent 4 }}
+

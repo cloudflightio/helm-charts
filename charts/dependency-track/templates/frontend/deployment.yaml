@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dependency-track.fullname" . }}-frontend
+  labels:
+    app.kubernetes.io/component: frontend
+    {{- include "dependency-track.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: frontend
+      {{- include "dependency-track.selectorLabels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app.kubernetes.io/component: frontend
+        {{- include "dependency-track.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "dependency-track.serviceAccountName" . }}-frontend
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion }}"
+          envFrom:
+          {{- if .Values.oidc.enabled }}
+          - configMapRef:
+              name: {{ include "dependency-track.fullname" . }}-frontend-oidc
+          {{- end }}
+          env:
+            - name: API_BASE_URL
+              value: https://{{ .Values.ingress.host }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              name: http
+          resources:
+            limits:
+              cpu: 500m
+              memory: 250Mi
+            requests:
+              cpu: 50m
+              memory: 250Mi
+      restartPolicy: Always
